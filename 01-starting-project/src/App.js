@@ -4,7 +4,8 @@ import MoviesList from './components/MoviesList';
 import './App.css';
 
 function App() {
-const [movies,setMovies] = useState([])
+const [movies,setMovies] = useState([]);
+const [isLoading,setIsLoading] = useState(false)
 
   async function moviesDataHandler() {
     try{
@@ -19,6 +20,7 @@ const [movies,setMovies] = useState([])
         }
       })
       setMovies(moviesData)
+      setIsLoading(false)
     }catch(err){
       console.log("error",err)
     }
@@ -31,7 +33,8 @@ const [movies,setMovies] = useState([])
         <button onClick={moviesDataHandler}>Fetch Movies</button>
       </section>
       <section>
-        <MoviesList movies={movies} />
+      {!isLoading &&  <MoviesList movies={movies} /> }
+      {isLoading && <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" alt="loading..."/>}
       </section>
     </React.Fragment>
   );
