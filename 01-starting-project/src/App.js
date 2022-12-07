@@ -5,12 +5,22 @@ import './App.css';
 
 function App() {
 const [movies,setMovies] = useState([]);
-const [isLoading,setIsLoading] = useState(false)
+const [isLoading,setIsLoading] = useState(false);
+const [error,setError] = useState(null)
 
   async function moviesDataHandler() {
     try{
       const response = await fetch("https://swapi.dev/api/films/");
+
+      if(!response.ok){
+        throw new Error ("somthing went wrong ...Retrying")
+       }
+  
+
       const data = await response.json();
+
+
+
       const moviesData = data.results.map((el)=>{
         return {
           id:el.episode_id,
@@ -21,10 +31,12 @@ const [isLoading,setIsLoading] = useState(false)
       })
       setMovies(moviesData)
       setIsLoading(false)
-    }catch(err){
-      console.log("error",err)
+      setError(null)
+    }catch(error){
+      setError(error.message)
+      console.log("error",error)
     }
-   
+   setIsLoading(false)
 
   }
   return (
@@ -35,6 +47,8 @@ const [isLoading,setIsLoading] = useState(false)
       <section>
       {!isLoading &&  <MoviesList movies={movies} /> }
       {isLoading && <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921" alt="loading..."/>}
+      {!isLoading && error && <p>{error}</p>}
+
       </section>
     </React.Fragment>
   );
